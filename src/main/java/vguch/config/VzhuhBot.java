@@ -53,6 +53,8 @@ public class VzhuhBot extends TelegramLongPollingBot {
 					.setText("New format (Создать в формате) - /jpg");
 			SendMessage messageOK = new SendMessage().setChatId(update.getMessage().getChatId())
 					.setText("OK, write text (ОК, пиши текст)");
+			
+			
 			try {
 				FileService fileService = new FileServiceImpl();
 				if (update.getMessage().getText().equals("/countusers")) {
@@ -78,7 +80,7 @@ public class VzhuhBot extends TelegramLongPollingBot {
 					if (!(resText.contains(id))) {
 						fileService.update(BotConfig.FILE_PATH_USERS, newText);
 					}
-
+					
 					ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
 					WebPReadParam readParam = new WebPReadParam();
 					readParam.setBypassFiltering(true);
