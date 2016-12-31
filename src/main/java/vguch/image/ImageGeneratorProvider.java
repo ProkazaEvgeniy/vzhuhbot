@@ -8,12 +8,11 @@ public class ImageGeneratorProvider {
         switch (type.toLowerCase()) {
             case "jpeg":
             case "jpg":
-                new JpegGenerator();
-                break;
+                return new JpegGenerator();
             case "webp":
-                new WebPGenerator();
+                return new WebPGenerator();
+            default:
+                return null;
         }
-
-        return null;
     }
 }

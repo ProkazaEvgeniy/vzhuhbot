@@ -1,7 +1,8 @@
 package vguch;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
@@ -11,20 +12,28 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
-import vguch.image.*;
+import vguch.image.ImageGenerationException;
+import vguch.image.ImageGenerator;
+import vguch.image.ImageGeneratorProvider;
 
 import java.io.File;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class VzhuhBot extends TelegramLongPollingBot {
-    private Cache<String, Session> sessions;
+    private LoadingCache<String, Session> sessions;
 
     public VzhuhBot() {
         this.sessions = CacheBuilder.newBuilder()
                 .expireAfterAccess(10L, TimeUnit.MINUTES)
-                .build();
+                .build(
+                        new CacheLoader<String, Session>() {
+                            @Override
+                            public Session load(String s) throws Exception {
+                                return new Session();
+                            }
+                        }
+                );
     }
 
     @Override
@@ -40,6 +49,7 @@ public class VzhuhBot extends TelegramLongPollingBot {
             try {
                 File document = session.generateTextImage(text);
                 answerDocument(message, document);
+                answerText(message, "");
             } catch (ImageGenerationException e) {
                 answerText(message, "");
             }
@@ -48,7 +58,8 @@ public class VzhuhBot extends TelegramLongPollingBot {
                     .getImageGeneratorFor(text.substring(1));
             if (imageGenerator != null) {
                 session.setImageGenerator(imageGenerator);
-            } else answerText(message, "");
+                answerText(message, "");
+            } else answerHelp(message);
         } else answerHelp(message);
     }
 
@@ -88,13 +99,7 @@ public class VzhuhBot extends TelegramLongPollingBot {
                     String.format("%d:%d",
                             message.getChatId(),
                             message.getFrom().getId()
-                    ),
-                    new Callable<Session>() {
-                        @Override
-                        public Session call() throws Exception {
-                            return new Session();
-                        }
-                    }
+                    )
             );
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
