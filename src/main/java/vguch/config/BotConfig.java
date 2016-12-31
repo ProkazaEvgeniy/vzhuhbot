@@ -10,4 +10,6 @@ public class BotConfig {
 	public static final String FILE_PATH_USERS = "D://dev-study_lesson/practic/vzhuhbot/src/main/webapp/WEB-INF/users.txt";
 	public static final String FORMAT_WEBP = "webp";
 	public static final String FORMAT_JPG = "jpg";
+	public static final String MIMETYPE_WEBP = "image/webp";
+	public static final String MIMETYPE_JPG = "image/jpg";
 }
