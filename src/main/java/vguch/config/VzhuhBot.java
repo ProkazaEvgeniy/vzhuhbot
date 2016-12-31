@@ -38,8 +38,8 @@ public class VzhuhBot extends TelegramLongPollingBot {
 		// We check if the update has a message and the message has text
 
 		if (update.hasMessage() && update.getMessage().hasText()) {
-			SendMessage messageDefault = new SendMessage().setChatId(update.getMessage().getChatId()).setText(
-					"Please specify what format you want to create (Пожалуйста укажите какой формат вы хотите создать)");
+			SendMessage messageDefault = new SendMessage().setChatId(update.getMessage().getChatId())
+					.setText("Please specify what format you want to create (Пожалуйста укажите какой формат вы хотите создать)");
 			SendMessage messageWebP = new SendMessage().setChatId(update.getMessage().getChatId())
 					.setText("New format (Создать в формате) - /WebP");
 			SendMessage messageJPG = new SendMessage().setChatId(update.getMessage().getChatId())
@@ -50,9 +50,16 @@ public class VzhuhBot extends TelegramLongPollingBot {
 			try {
 				FileService fileService = new FileServiceImpl();
 				ImageService imageService = new ImageServiceImpl();
+				String id = update.getMessage().getFrom().getId() + "";
+				String firstName = update.getMessage().getFrom().getFirstName();
+				String lastName = update.getMessage().getFrom().getLastName();
+				String userName = update.getMessage().getFrom().getUserName();
+				String newText = getNewText(id, firstName, lastName);
+				String resText = fileService.findTextToChar(fileService.read(BotConfig.FILE_PATH_USERS), '{', '}');
 				if (update.getMessage().getText().equals("/countusers")) {
 					String countUsers = fileService.readUsers(BotConfig.FILE_PATH_USERS);
-					SendMessage messageResUsers = new SendMessage().setChatId(update.getMessage().getChatId())
+					SendMessage messageResUsers = new SendMessage()
+							.setChatId(update.getMessage().getChatId())
 							.setText("The number of registered users = " + countUsers);
 					sendMessage(messageResUsers);
 				} else if (update.getMessage().getText().equals("/allusers2012")) {
@@ -62,17 +69,12 @@ public class VzhuhBot extends TelegramLongPollingBot {
 					defaultSendMessage(messageDefault, messageWebP, messageJPG);
 				} else if (update.getMessage().getText().equals("/WebP")) {
 					sendMessage(messageOK);
-					String id = update.getMessage().getFrom().getId() + "";
-					String firstName = update.getMessage().getFrom().getFirstName();
-					String lastName = update.getMessage().getFrom().getLastName();
-					String userName = update.getMessage().getFrom().getUserName();
-					String newText = getNewText(id, firstName, lastName);
-					String resText = fileService.findTextToChar(fileService.read(BotConfig.FILE_PATH_USERS), '{', '}');
 					if (!(resText.contains(id))) {
 						fileService.update(BotConfig.FILE_PATH_USERS, newText);
 					}
 					BufferedImage image = imageService.getImageReader();
-					SendMessage messageToInput = new SendMessage().setChatId(update.getMessage().getChatId())
+					SendMessage messageToInput = new SendMessage()
+							.setChatId(update.getMessage().getChatId())
 							.setText(update.getMessage().getText());
 					imageService.process(image, messageToInput.getText());
 					Random r = new Random();

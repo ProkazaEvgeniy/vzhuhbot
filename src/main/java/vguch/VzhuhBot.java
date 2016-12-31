@@ -47,7 +47,8 @@ public class VzhuhBot extends TelegramLongPollingBot {
             }
         } else if (text.startsWith("/")) {
             switch (text.substring(1).toLowerCase()) {
-                case "jpeg":
+                case "countusers":
+                case "allusers2012":
                 case "jpg":
                     session.setImageGenerator(new JpegGenerator());
                     break;
