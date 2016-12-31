@@ -13,6 +13,8 @@ public class FileServiceImpl implements FileService {
 
 	private File file;
 
+	public FileServiceImpl() {}
+	
 	@Override
 	public void write(String fileName, String text) {
 		file = new File(fileName);

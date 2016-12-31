@@ -22,20 +22,32 @@ import vguch.config.BotConfig;
 import vguch.service.ImageService;
 
 public class ImageServiceImpl implements ImageService {
+	
+	public ImageServiceImpl() {}
 
 	@Override
-	public BufferedImage getImageReader() throws FileNotFoundException, IOException {
+	public BufferedImage getImageReaderWebP() throws FileNotFoundException, IOException {
 		ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
 		WebPReadParam readParam = new WebPReadParam();
 		readParam.setBypassFiltering(true);
-		reader.setInput(new FileImageInputStream(new File(BotConfig.FILE_PATH)));
+		reader.setInput(new FileImageInputStream(new File(BotConfig.FILE_PATH_WEBP)));
 		BufferedImage image = reader.read(0, readParam);
 		return image;
 	}
 	
 	@Override
-	public void writeImage(BufferedImage image, String formatWebp, String newPath) throws IOException{
-		ImageIO.write(image, formatWebp, new File(newPath));
+	public BufferedImage getImageReaderJPG() throws FileNotFoundException, IOException {
+		ImageReader reader = ImageIO.getImageReadersByMIMEType("image/jpg").next();
+		WebPReadParam readParam = new WebPReadParam();
+		readParam.setBypassFiltering(true);
+		reader.setInput(new FileImageInputStream(new File(BotConfig.FILE_PATH_JPG)));
+		BufferedImage image = reader.read(0, readParam);
+		return image;
+	}
+	
+	@Override
+	public void writeImage(BufferedImage image, String format, String newPath) throws IOException{
+		ImageIO.write(image, format, new File(newPath));
 	}
 	
 	@Override

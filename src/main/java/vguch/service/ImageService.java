@@ -6,7 +6,8 @@ import java.io.IOException;
 
 public interface ImageService {
 
-	BufferedImage getImageReader() throws FileNotFoundException, IOException;
-	void writeImage(BufferedImage image, String formatWebp, String newPath) throws IOException;
+	BufferedImage getImageReaderWebP() throws FileNotFoundException, IOException;
+	BufferedImage getImageReaderJPG() throws FileNotFoundException, IOException;
+	void writeImage(BufferedImage image, String format, String newPath) throws IOException;
 	BufferedImage process(BufferedImage image, String text);
 }
