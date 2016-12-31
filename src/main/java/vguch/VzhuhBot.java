@@ -11,9 +11,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
-import vguch.image.ImageGenerationException;
-import vguch.image.JpegGenerator;
-import vguch.image.WebPGenerator;
+import vguch.image.*;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -46,20 +44,11 @@ public class VzhuhBot extends TelegramLongPollingBot {
                 answerText(message, "");
             }
         } else if (text.startsWith("/")) {
-            switch (text.substring(1).toLowerCase()) {
-                case "countusers":
-                case "allusers2012":
-                case "jpg":
-                    session.setImageGenerator(new JpegGenerator());
-                    break;
-                case "webp":
-                    session.setImageGenerator(new WebPGenerator());
-                    break;
-                default:
-                    answerHelp(message);
-                    return;
-            }
-            answerText(message, "");
+            ImageGenerator imageGenerator = ImageGeneratorProvider
+                    .getImageGeneratorFor(text.substring(1));
+            if (imageGenerator != null) {
+                session.setImageGenerator(imageGenerator);
+            } else answerText(message, "");
         } else answerHelp(message);
     }
 

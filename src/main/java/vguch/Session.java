@@ -20,7 +20,15 @@ public class Session {
         return imageGenerator != null;
     }
 
+    public boolean hasAdminService(){
+    	return adminService != null;
+    }
+    
     public void setImageGenerator(ImageGenerator imageGenerator) {
         this.imageGenerator = imageGenerator;
+    }
+    
+    public void setAdminService(AdminService adminService){
+    	this.adminService = adminService;
     }
 }
